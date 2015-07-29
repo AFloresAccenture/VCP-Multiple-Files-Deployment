@@ -1,0 +1,146 @@
+#!/bin/bash
+
+####################################################################################################################
+#																													
+#	Script Name: XXNBTYEXT08_MF.prog																			
+#	Author's Name: Erwin Ramos																				
+#	Date written: 13-May-2015																						
+#	RICEFW Object: VCP Multiple files checking																								
+#	Description: This program will check the unix files in the incoming directory. 
+#				All old flat file will be moved to archive folder and the latest file will remain in the incoming directory. 															
+#	Program Style: 																									
+#																													
+#	Maintenance History:																							
+#																													
+#	Date			Issue#		Name			Remarks																
+#	-----------		------		-----------		------------------------------------------------					
+#	13-May-2015				 	Erwin Ramos		Initial Development		
+#	15-May-2015					Erwin Ramos		Added creation & deletion of temp directory. 
+#												Change the achive and incoming directory into parameter. 
+#												Change the file name form XXNBTYEXT_08 to XXNBTYEXT08_MF.prog 									
+#	
+#																														
+####################################################################################################################
+
+tempDIR="/tmp/flatfile_tmp";
+#P_ARCHIVE_DIR="$XXNBTY_TOP/data/in/arch"; ## This is the archive directory
+#incomingDIR="/home/nbtydata/incoming";	## This is the current incoming directory
+P_INCOMING_DIR="$5";
+P_ARCHIVE_DIR="$6";	
+
+P_INCOMING_DIR=$(eval echo ${P_INCOMING_DIR})
+P_ARCHIVE_DIR=$(eval echo ${P_ARCHIVE_DIR})
+
+FILENAME1="XXNBTY_ON_HAND_DATA";
+FILENAME2="XXNBTY_SUPPLIES_IN_TRANSIT";
+FILENAME3="XXNBTY_SUPPLIES_WO";
+FILENAME4="XXNBTY_DEMAND_WORK_ORDER";
+FILENAME5="XXNBTY_SALES_ORDERS";
+FILENAME6="XXNBTY_COST";
+
+#ON_HAND Validation
+countfile1=`ls -l $P_INCOMING_DIR/$FILENAME1* | awk '{print $9}' | wc -l`; #count of flat files.
+file1toProc=`ls -lrt $P_INCOMING_DIR/$FILENAME1* | awk '{print $9}' | (tail -n1 && head -n1)`;	#result of latest flat files.
+archfile1=`ls -l $P_INCOMING_DIR/$FILENAME1* | awk '{print $9}'`;	#old flat files.
+
+#IN_TRANSIT Validation
+countfile2=`ls -l $P_INCOMING_DIR/$FILENAME2* | awk '{print $9}' | wc -l`; #count of flat files.
+file2toProc=`ls -lrt $P_INCOMING_DIR/$FILENAME2* | awk '{print $9}' | (tail -n1 && head -n1)`;	#result of latest flat files.
+archfile2=`ls -l $P_INCOMING_DIR/$FILENAME2* | awk '{print $9}'`;	#old flat files.
+
+#SUPPLIES_WO Validation
+countfile3=`ls -l $P_INCOMING_DIR/$FILENAME3* | awk '{print $9}' | wc -l`; #count of flat files.
+file3toProc=`ls -lrt $P_INCOMING_DIR/$FILENAME3* | awk '{print $9}' | (tail -n1 && head -n1)`;	#result of latest flat files.
+archfile3=`ls -l $P_INCOMING_DIR/$FILENAME3* | awk '{print $9}'`;	#old flat files.
+
+#DEMAND_WORK_ORDER Validation
+countfile4=`ls -l $P_INCOMING_DIR/$FILENAME4* | awk '{print $9}' | wc -l`; #count of flat files.
+file4toProc=`ls -lrt $P_INCOMING_DIR/$FILENAME4* | awk '{print $9}' | (tail -n1 && head -n1)`;	#result of latest flat files.
+archfile4=`ls -l $P_INCOMING_DIR/$FILENAME4* | awk '{print $9}'`;	#old flat files.
+
+#SALES_ORDERS Validation
+countfile5=`ls -l $P_INCOMING_DIR/$FILENAME5* | awk '{print $9}' | wc -l`; #count of flat files.
+file5toProc=`ls -lrt $P_INCOMING_DIR/$FILENAME5* | awk '{print $9}' | (tail -n1 && head -n1)`;	#result of latest flat files.
+archfile5=`ls -l $P_INCOMING_DIR/$FILENAME5* | awk '{print $9}'`;	#old flat files.
+
+#COST Validation
+countfile6=`ls -l $P_INCOMING_DIR/$FILENAME6* | awk '{print $9}' | wc -l`; #count of flat files.
+file6toProc=`ls -lrt $P_INCOMING_DIR/$FILENAME6* | awk '{print $9}' | (tail -n1 && head -n1)`;	#result of latest flat files.
+archfile6=`ls -l $P_INCOMING_DIR/$FILENAME6* | awk '{print $9}'`;	#old flat files.
+
+
+##Create temp directory
+cd /tmp
+mkdir flatfile_tmp
+chmod 777 flatfile_tmp
+
+##Multiple files validation for XXNBTY_ON_HAND_DATA flat file
+
+if [ $countfile1 -gt 1 ] 
+
+then 
+	mv $file1toProc $tempDIR	#move the latest file in the temp directory   
+	mv $archfile1 $P_ARCHIVE_DIR	#move the old files in the archive directory  
+	cd $tempDIR					#Go to temp directory
+	mv * $P_INCOMING_DIR			#Move the latest file in the incoming directory
+fi
+
+##Multiple files validation for XXNBTY_SUPPLIES_IN_TRANSIT flat file
+
+if [ $countfile2 -gt 1 ] 
+
+then 
+	mv $file2toProc $tempDIR	#move the latest file in the temp directory   
+	mv $archfile2 $P_ARCHIVE_DIR	#move the old files in the archive directory  
+	cd $tempDIR					#Go to temp directory
+	mv * $P_INCOMING_DIR			#Move the latest file in the incoming directory
+fi
+
+##Multiple files validation for XXNBTY_SUPPLIES_WO flat file
+
+if [ $countfile3 -gt 1 ] 
+
+then 
+	mv $file3toProc $tempDIR	#move the latest file in the temp directory   
+	mv $archfile3 $P_ARCHIVE_DIR	#move the old files in the archive directory  
+	cd $tempDIR					#Go to temp directory
+	mv * $P_INCOMING_DIR			#Move the latest file in the incoming directory
+fi
+
+##Multiple files validation for XXNBTY_DEMAND_WORK_ORDER flat file
+
+if [ $countfile4 -gt 1 ] 
+
+then 
+	mv $file4toProc $tempDIR	#move the latest file in the temp directory   
+	mv $archfile4 $P_ARCHIVE_DIR	#move the old files in the archive directory  
+	cd $tempDIR					#Go to temp directory
+	mv * $P_INCOMING_DIR			#Move the latest file in the incoming directory
+fi
+
+##Multiple files validation for XXNBTY_SALES_ORDERS flat file
+
+if [ $countfile5 -gt 1 ] 
+
+then 
+	mv $file5toProc $tempDIR	#move the latest file in the temp directory   
+	mv $archfile5 $P_ARCHIVE_DIR	#move the old files in the archive directory 
+	cd $tempDIR					#Go to temp directory
+	mv * $P_INCOMING_DIR			#Move the latest file in the incoming directory
+fi
+
+##Multiple files validation for XXNBTY_COST flat file
+
+if [ $countfile6 -gt 1 ] 
+
+then 
+	mv $file6toProc $tempDIR	#move the latest file in the temp directory   
+	mv $archfile6 $P_ARCHIVE_DIR	#move the old files in the archive directory  
+	cd $tempDIR					#Go to temp directory
+	mv * $P_INCOMING_DIR			#Move the latest file in the incoming directory
+fi
+
+#Temp directory deletion
+rmdir /tmp/flatfile_tmp
+
+exit 0

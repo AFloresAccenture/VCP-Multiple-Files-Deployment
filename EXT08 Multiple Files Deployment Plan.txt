@@ -1,0 +1,48 @@
+Command to Execute the object of VCP Multiple files. 
+
+
+1.Open Unix. 
+2.Move the XXNBTY_EXT08_VCP_FILE_VAL_PKG.pks and XXNBTY_EXT08_VCP_FILE_VAL_PKG.pkb to /u01/oracle/apps/apps_st/appl/xxnbty/12.0.0/admin/sql using WINSCP and execute the command below in the UNIX.
+
+
+sqlplus -s USERNAME/PASSWORD
+
+@/u01/oracle/apps/apps_st/appl/xxnbty/12.0.0/admin/sql/XXNBTY_EXT08_VCP_FILE_VAL_PKG.pks
+
+@/u01/oracle/apps/apps_st/appl/xxnbty/12.0.0/admin/sql/XXNBTY_EXT08_VCP_FILE_VAL_PKG.pkb
+
+3.Move the  (XXNBTY_EXT08_CP_a.ldt, XXNBTY_DAILY_PLANNING_REQUEST_RS.ldt, XXNBTY_DAILY_PLANNING_REQUEST_RL.ldt, XXNBTY_Planning_MPS_MRP_RS.ldt, XXNBTY_Planning_MPS_MRP_RL.ldt, XXNBTY_EXT08_CP_a.ldt and XXNBTY_EXT08_CP_c.dt) to /u01/oracle/apps/apps_st/appl/xxnbty/12.0.0/admin/import using WINSCP and execute the command below in the UNIX.
+NOTE: Please make sure to update the password.
+
+cd /u01/oracle/apps/apps_st/appl/xxnbty/12.0.0/admin/import
+
+FNDLOAD apps/PASSWORD 0 Y UPLOAD $FND_TOP/patch/115/import/afcpprog.lct XXNBTY_EXT08_CP_a.ldt CUSTOM_MODE=FORCE
+
+FNDLOAD apps/PASSWORD 0 Y UPLOAD $FND_TOP/patch/115/import/afcpprog.lct XXNBTY_EXT08_CP_c.ldt CUSTOM_MODE=FORCE
+
+
+FNDLOAD apps/PASSWORD 0 Y UPLOAD $FND_TOP/patch/115/import/afcprset.lct XXNBTY_DAILY_PLANNING_REQUEST_RS.ldt UPLOAD_MODE=REPLACE CUSTOM_MODE=FORCE
+
+FNDLOAD apps/PASSWORD 0 Y UPLOAD $FND_TOP/patch/115/import/afcprset.lct XXNBTY_DAILY_PLANNING_REQUEST_RL.ldt UPLOAD_MODE=REPLACE CUSTOM_MODE=FORCE
+
+FNDLOAD apps/PASSWORD 0 Y UPLOAD $FND_TOP/patch/115/import/afcprset.lct XXNBTY_Planning_MPS_MRP_RS.ldt UPLOAD_MODE=REPLACE CUSTOM_MODE=FORCE
+
+FNDLOAD apps/PASSWORD 0 Y UPLOAD $FND_TOP/patch/115/import/afcprset.lct XXNBTY_Planning_MPS_MRP_RL.ldt UPLOAD_MODE=REPLACE CUSTOM_MODE=FORCE
+
+
+
+4. Move the XXNBTYEXT08.prog and XXNBTYEXT08_MF.prog in the /u01/oracle/apps/apps_st/appl/xxnbty/12.0.0/bin using WINSCP and execute the command below in the UNIX. 
+
+cd /u01/oracle/apps/apps_st/appl/xxnbty/12.0.0/bin
+
+dos2unix XXNBTYEXT08.prog
+
+dos2unix XXNBTYEXT08_MF.prog
+
+chmod 777 XXNBTYEXT08.prog
+chmod 777 XXNBTYEXT08_MF.prog
+
+
+ln -s /u01/oracle/apps/apps_st/appl/fnd/12.0.0/bin/fndcpesr XXNBTYEXT08
+
+ln -s /u01/oracle/apps/apps_st/appl/fnd/12.0.0/bin/fndcpesr XXNBTYEXT08_MF
